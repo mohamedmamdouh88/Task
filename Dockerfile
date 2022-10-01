@@ -1,26 +1,12 @@
-# use a python image
-FROM python:3.6
+FROM node:latest
 
-# set the working directory in the container to /app
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# add the current directory to the container as /app
-COPY . /app
+COPY package.json ./
 
-# pip install flask
-RUN pip install --upgrade pip && \
-    pip install \
-        Flask \
-        awscli \
-        flake8 \
-        pylint \
-        pytest \
-        pytest-flask
+RUN npm install
 
-# expose the default flask port
-EXPOSE 8080
+COPY . .
 
-# execute the Flask app
-ENTRYPOINT ["python"]
-HEALTHCHECK CMD curl --fail http://localhost:8080/ || exit 1
-CMD ["/app/app.py"]
+EXPOSE 3000
+CMD [ "node", "index.js" ]
